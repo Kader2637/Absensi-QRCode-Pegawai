@@ -1,0 +1,36 @@
+# Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+Thumbs.db
+db.webinspector
+.DS_Store
+.DS_Store?
+ehthumbs.db
+
+# Backend ignored folders
+backend/.env
+backend/storage/*.key
+backend/vendor/
+backend/bootstrap/cache/*
+backend/public/storage
+backend/storage/framework/cache/data/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/storage/logs/*
+
+# Frontend ignored folders
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
