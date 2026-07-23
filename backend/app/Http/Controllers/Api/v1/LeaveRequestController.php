@@ -109,7 +109,7 @@ class LeaveRequestController extends Controller
 
         $this->logActivity(
             ActivityAction::CREATE_EMPLOYEE, // Can map to generic action or custom
-            "Pegawai mengajukan {$request->type} dari {$request->start_date} s/d {$request->end_date}.",
+            "Mahasiswa mengajukan {$request->type} dari {$request->start_date} s/d {$request->end_date}.",
             $userId
         );
 
@@ -161,7 +161,7 @@ class LeaveRequestController extends Controller
 
         $this->logActivity(
             ActivityAction::APPROVE_LEAVE,
-            "Admin menyetujui pengajuan {$leave->type} pegawai {$employee->name} dari {$leave->start_date->format('Y-m-d')} s/d {$leave->end_date->format('Y-m-d')}."
+            "Admin menyetujui pengajuan {$leave->type} mahasiswa {$employee->name} dari {$leave->start_date->format('Y-m-d')} s/d {$leave->end_date->format('Y-m-d')}."
         );
 
         return $this->successResponse('Pengajuan izin disetujui.', $leave);
@@ -198,7 +198,7 @@ class LeaveRequestController extends Controller
 
         $this->logActivity(
             ActivityAction::REJECT_LEAVE,
-            "Admin menolak pengajuan {$leave->type} pegawai {$employee->name} dengan alasan: {$request->admin_notes}."
+            "Admin menolak pengajuan {$leave->type} mahasiswa {$employee->name} dengan alasan: {$request->admin_notes}."
         );
 
         return $this->successResponse('Pengajuan izin ditolak.', $leave);

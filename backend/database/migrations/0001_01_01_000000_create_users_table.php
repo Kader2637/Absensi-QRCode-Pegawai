@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('department')->nullable();
             $table->string('password');
             $table->string('avatar_url')->nullable();
-            $table->string('role')->default('pegawai');
+            $table->string('role')->default('mahasiswa');
             $table->string('status')->default('active');
             $table->rememberToken();
             $table->softDeletes();

@@ -18,7 +18,7 @@ const History = () => {
     queryKey: ['myHistory', page, monthFilter, yearFilter],
     queryFn: async () => {
       const res = await api.get(
-        `/pegawai/history?page=${page}&month=${monthFilter}&year=${yearFilter}&limit=10`
+        `/mahasiswa/history?page=${page}&month=${monthFilter}&year=${yearFilter}&limit=10`
       );
       return res.data;
     }

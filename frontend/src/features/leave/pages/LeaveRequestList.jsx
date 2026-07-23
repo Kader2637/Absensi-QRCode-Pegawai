@@ -89,7 +89,7 @@ const LeaveRequestList = () => {
     <div className="space-y-6 text-left">
       <div>
         <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Persetujuan Izin / Sakit</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Verifikasi, berikan catatan, dan setujui/tolak pengajuan cuti pegawai.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Verifikasi, berikan catatan, dan setujui/tolak pengajuan izin mahasiswa.</p>
       </div>
 
       {/* Filters */}
@@ -130,10 +130,10 @@ const LeaveRequestList = () => {
       ) : isError ? (
         <Alert type="error" title="Gagal memuat pengajuan izin" message={error.message} />
       ) : leaves.length === 0 ? (
-        <EmptyState title="Tidak Ada Pengajuan" description="Tidak ditemukan surat pengajuan cuti/izin pada kategori filter ini." />
+        <EmptyState title="Tidak Ada Pengajuan" description="Tidak ditemukan surat pengajuan izin pada kategori filter ini." />
       ) : (
         <div className="space-y-4">
-          <Table headers={['Pegawai', 'Tipe', 'Tanggal Cuti', 'Durasi', 'Alasan', 'Status', 'Aksi']}>
+          <Table headers={['Mahasiswa', 'Tipe', 'Tanggal Izin', 'Durasi', 'Alasan', 'Status', 'Aksi']}>
             {leaves.map((leave) => {
               const statusStr = leave.status?.value || leave.status;
               const start = new Date(leave.start_date);
@@ -143,8 +143,8 @@ const LeaveRequestList = () => {
                 <tr key={leave.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/10 transition-colors">
                   <td className="px-6 py-4 flex items-center gap-3">
                     <div>
-                      <h4 className="font-semibold text-sm text-gray-900 dark:text-white leading-none mb-0.5">{leave.user?.name || 'Pegawai'}</h4>
-                      <span className="text-xs text-gray-400">NIP: {leave.user?.nip || '-'} | {leave.user?.department || 'Umum'}</span>
+                      <h4 className="font-semibold text-sm text-gray-900 dark:text-white leading-none mb-0.5">{leave.user?.name || 'Mahasiswa'}</h4>
+                      <span className="text-xs text-gray-400">NIM: {leave.user?.nip || '-'} | {leave.user?.department || 'Umum'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -228,11 +228,11 @@ const LeaveRequestList = () => {
             {/* Details Grid */}
             <div className="grid grid-cols-2 gap-4 bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
               <div>
-                <span className="text-xs text-gray-400 uppercase font-semibold">Nama Pegawai</span>
+                <span className="text-xs text-gray-400 uppercase font-semibold">Nama Mahasiswa</span>
                 <p className="font-bold text-gray-800 dark:text-white mt-0.5">{selectedLeave.user?.name}</p>
               </div>
               <div>
-                <span className="text-xs text-gray-400 uppercase font-semibold">NIP / Jabatan</span>
+                <span className="text-xs text-gray-400 uppercase font-semibold">NIM / Kelas</span>
                 <p className="font-semibold text-gray-700 dark:text-gray-300 mt-0.5">
                   {selectedLeave.user?.nip} | {selectedLeave.user?.department || 'Umum'}
                 </p>

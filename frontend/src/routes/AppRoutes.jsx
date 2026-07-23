@@ -6,9 +6,11 @@ import { useAuth } from '../context/AuthContext';
 
 // Pages
 import Login from '../features/auth/pages/Login';
+import Register from '../features/auth/pages/Register';
 import AdminDashboard from '../features/dashboard/pages/AdminDashboard';
-import PegawaiDashboard from '../features/dashboard/pages/PegawaiDashboard';
+import MahasiswaDashboard from '../features/dashboard/pages/MahasiswaDashboard';
 import EmployeeList from '../features/employees/pages/EmployeeList';
+import HolidayList from '../features/holidays/pages/HolidayList';
 import QRGenerator from '../features/qr-code/pages/QRGenerator';
 import AttendanceList from '../features/attendance/pages/AttendanceList';
 import LeaveRequestList from '../features/leave/pages/LeaveRequestList';
@@ -27,7 +29,7 @@ const RootRedirect = () => {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
   const roleStr = user.role?.value || user.role;
-  return <Navigate to={roleStr === 'admin' ? '/admin/dashboard' : '/pegawai/dashboard'} replace />;
+  return <Navigate to={roleStr === 'admin' ? '/admin/dashboard' : '/mahasiswa/dashboard'} replace />;
 };
 
 const AppRoutes = () => {
@@ -35,6 +37,7 @@ const AppRoutes = () => {
     <Routes>
       {/* Public Route */}
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/forbidden" element={<Forbidden />} />
 
       {/* Main App Routes (Protected) */}
@@ -52,7 +55,7 @@ const AppRoutes = () => {
         } 
       />
       <Route 
-        path="/admin/pegawai" 
+        path="/admin/mahasiswa" 
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <DashboardLayout>
@@ -111,22 +114,32 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } 
       />
-
-      {/* Pegawai Specific Routes */}
       <Route 
-        path="/pegawai/dashboard" 
+        path="/admin/holidays" 
         element={
-          <ProtectedRoute allowedRoles={['pegawai']}>
+          <ProtectedRoute allowedRoles={['admin']}>
             <DashboardLayout>
-              <PegawaiDashboard />
+              <HolidayList />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } 
+      />
+
+      {/* Mahasiswa Specific Routes */}
+      <Route 
+        path="/mahasiswa/dashboard" 
+        element={
+          <ProtectedRoute allowedRoles={['mahasiswa']}>
+            <DashboardLayout>
+              <MahasiswaDashboard />
             </DashboardLayout>
           </ProtectedRoute>
         } 
       />
       <Route 
-        path="/pegawai/scan" 
+        path="/mahasiswa/scan" 
         element={
-          <ProtectedRoute allowedRoles={['pegawai']}>
+          <ProtectedRoute allowedRoles={['mahasiswa']}>
             <DashboardLayout>
               <ScanQR />
             </DashboardLayout>
@@ -134,9 +147,9 @@ const AppRoutes = () => {
         } 
       />
       <Route 
-        path="/pegawai/leave" 
+        path="/mahasiswa/leave" 
         element={
-          <ProtectedRoute allowedRoles={['pegawai']}>
+          <ProtectedRoute allowedRoles={['mahasiswa']}>
             <DashboardLayout>
               <LeaveForm />
             </DashboardLayout>
@@ -144,11 +157,21 @@ const AppRoutes = () => {
         } 
       />
       <Route 
-        path="/pegawai/history" 
+        path="/mahasiswa/history" 
         element={
-          <ProtectedRoute allowedRoles={['pegawai']}>
+          <ProtectedRoute allowedRoles={['mahasiswa']}>
             <DashboardLayout>
               <History />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/mahasiswa/holidays" 
+        element={
+          <ProtectedRoute allowedRoles={['mahasiswa']}>
+            <DashboardLayout>
+              <HolidayList />
             </DashboardLayout>
           </ProtectedRoute>
         } 

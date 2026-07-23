@@ -110,7 +110,7 @@ const QRGenerator = () => {
         </head>
         <body onload="window.print(); window.close();">
           <h1>QR CODE ABSENSI HARIAN</h1>
-          <p>Scan menggunakan aplikasi absen pegawai. Berlaku hingga: ${new Date(activeQr.expires_at).toLocaleString('id-ID')}</p>
+          <p>Scan menggunakan aplikasi absen mahasiswa. Berlaku hingga: ${new Date(activeQr.expires_at).toLocaleString('id-ID')}</p>
           <img src="${activeQrImage}" />
         </body>
       </html>
@@ -122,7 +122,7 @@ const QRGenerator = () => {
     <div className="space-y-6 text-left">
       <div>
         <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">QR Code Generator</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Generate token QR Code baru untuk absensi masuk/pulang harian pegawai.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Generate token QR Code baru untuk absensi masuk/pulang harian mahasiswa.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -132,7 +132,7 @@ const QRGenerator = () => {
           <div>
             <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">Pengaturan Masa Berlaku</h3>
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
-              Pilih berapa lama token QR Code absensi ini aktif sebelum kedaluwarsa secara otomatis. Pegawai tidak dapat memindai QR Code yang kedaluwarsa.
+              Pilih berapa lama token QR Code absensi ini aktif sebelum kedaluwarsa secara otomatis. Mahasiswa tidak dapat memindai QR Code yang kedaluwarsa.
             </p>
 
             <div className="flex flex-col mb-6">

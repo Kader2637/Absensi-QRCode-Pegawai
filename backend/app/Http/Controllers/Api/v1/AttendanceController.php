@@ -129,7 +129,7 @@ class AttendanceController extends Controller
 
         $this->logActivity(
             ActivityAction::UPDATE_SETTINGS,
-            "Admin memperbarui kehadiran pegawai {$attendance->user->name} tanggal {$attendance->date->format('Y-m-d')}. Status diubah dari {$oldStatus} ke {$request->status}."
+            "Admin memperbarui kehadiran mahasiswa {$attendance->user->name} tanggal {$attendance->date->format('Y-m-d')}. Status diubah dari {$oldStatus} ke {$request->status}."
         );
 
         return $this->successResponse('Data kehadiran berhasil diperbarui.', $attendance);
@@ -145,7 +145,7 @@ class AttendanceController extends Controller
 
         $this->logActivity(
             ActivityAction::UPDATE_SETTINGS,
-            "Admin menghapus data kehadiran pegawai {$attendance->user->name} tanggal {$attendance->date->format('Y-m-d')}."
+            "Admin menghapus data kehadiran mahasiswa {$attendance->user->name} tanggal {$attendance->date->format('Y-m-d')}."
         );
 
         $attendance->delete();

@@ -101,7 +101,7 @@ const AttendanceList = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Monitoring Absensi</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Lihat, saring, dan sesuaikan data kehadiran seluruh pegawai.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Lihat, saring, dan sesuaikan data kehadiran seluruh mahasiswa.</p>
         </div>
         <Button variant="outline" className="flex items-center gap-2 cursor-pointer bg-white dark:bg-transparent w-full md:w-auto justify-center" onClick={handleExport}>
           <FiDownload /> Unduh CSV Kehadiran
@@ -116,7 +116,7 @@ const AttendanceList = () => {
             setSearch(e.target.value);
             setPage(1);
           }}
-          placeholder="Cari NIP, nama..."
+          placeholder="Cari NIM, nama..."
           className="w-full"
         />
 
@@ -181,10 +181,10 @@ const AttendanceList = () => {
       ) : isError ? (
         <Alert type="error" title="Gagal memuat absensi" message={error.message} />
       ) : attendances.length === 0 ? (
-        <EmptyState title="Tidak Ada Data Kehadiran" description="Tidak ditemukan record kehadiran pegawai pada filter terpilih." />
+        <EmptyState title="Tidak Ada Data Kehadiran" description="Tidak ditemukan record kehadiran mahasiswa pada filter terpilih." />
       ) : (
         <div className="space-y-4">
-          <Table headers={['Tanggal', 'Pegawai', 'Jam Masuk', 'Jam Pulang', 'Status', 'Tipe', 'Catatan/Lokasi', 'Aksi']}>
+          <Table headers={['Tanggal', 'Mahasiswa', 'Jam Masuk', 'Jam Pulang', 'Status', 'Tipe', 'Catatan/Lokasi', 'Aksi']}>
             {attendances.map((att) => {
               const statusStr = att.status?.value || att.status;
               const typeStr = att.attendance_type?.value || att.attendance_type;
@@ -195,8 +195,8 @@ const AttendanceList = () => {
                   </td>
                   <td className="px-6 py-4 flex items-center gap-3">
                     <div>
-                      <h4 className="font-semibold text-sm text-gray-900 dark:text-white leading-none mb-0.5">{att.user?.name || 'Pegawai'}</h4>
-                      <span className="text-xs text-gray-400">NIP: {att.user?.nip || '-'} | {att.user?.department || 'Umum'}</span>
+                      <h4 className="font-semibold text-sm text-gray-900 dark:text-white leading-none mb-0.5">{att.user?.name || 'Mahasiswa'}</h4>
+                      <span className="text-xs text-gray-400">NIM: {att.user?.nip || '-'} | {att.user?.department || 'Umum'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 font-mono text-xs">{att.check_in || '-'}</td>

@@ -3,17 +3,19 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\DashboardController;
-use App\Http\Controllers\Api\v1\PegawaiController;
+use App\Http\Controllers\Api\v1\MahasiswaController;
 use App\Http\Controllers\Api\v1\QRCodeController;
 use App\Http\Controllers\Api\v1\ScanController;
 use App\Http\Controllers\Api\v1\AttendanceController;
 use App\Http\Controllers\Api\v1\LeaveRequestController;
 use App\Http\Controllers\Api\v1\NotificationController;
 use App\Http\Controllers\Api\v1\SettingsController;
+use App\Http\Controllers\Api\v1\HolidayController;
 
 Route::prefix('v1')->group(function () {
     // Public authentication routes
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
 
     // Authenticated & Active routes
     Route::middleware(['auth:sanctum', 'active'])->group(function () {
@@ -28,7 +30,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
         
         // Impersonation termination
-        Route::post('/pegawai/stop-impersonate', [PegawaiController::class, 'stopImpersonate']);
+        Route::post('/mahasiswa/stop-impersonate', [MahasiswaController::class, 'stopImpersonate']);
 
         // Shared QR Code route (for both admin and employees to download/view)
         Route::get('/qrcode/latest', [QRCodeController::class, 'latest']);
@@ -38,15 +40,15 @@ Route::prefix('v1')->group(function () {
             // Dashboard
             Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard']);
             
-            // Employee Management
-            Route::get('/admin/pegawai', [PegawaiController::class, 'index']);
-            Route::post('/admin/pegawai', [PegawaiController::class, 'store']);
-            Route::get('/admin/pegawai/export', [PegawaiController::class, 'export']);
-            Route::post('/admin/pegawai/import', [PegawaiController::class, 'import']);
-            Route::get('/admin/pegawai/{id}', [PegawaiController::class, 'show']);
-            Route::put('/admin/pegawai/{id}', [PegawaiController::class, 'update']);
-            Route::delete('/admin/pegawai/{id}', [PegawaiController::class, 'destroy']);
-            Route::post('/admin/pegawai/{id}/impersonate', [PegawaiController::class, 'impersonate']);
+            // Student Management
+            Route::get('/admin/mahasiswa', [MahasiswaController::class, 'index']);
+            Route::post('/admin/mahasiswa', [MahasiswaController::class, 'store']);
+            Route::get('/admin/mahasiswa/export', [MahasiswaController::class, 'export']);
+            Route::post('/admin/mahasiswa/import', [MahasiswaController::class, 'import']);
+            Route::get('/admin/mahasiswa/{id}', [MahasiswaController::class, 'show']);
+            Route::put('/admin/mahasiswa/{id}', [MahasiswaController::class, 'update']);
+            Route::delete('/admin/mahasiswa/{id}', [MahasiswaController::class, 'destroy']);
+            Route::post('/admin/mahasiswa/{id}/impersonate', [MahasiswaController::class, 'impersonate']);
             
             // QR Code Management
             Route::get('/admin/qrcode', [QRCodeController::class, 'index']);
@@ -69,20 +71,26 @@ Route::prefix('v1')->group(function () {
             // System Settings
             Route::get('/admin/settings', [SettingsController::class, 'show']);
             Route::put('/admin/settings', [SettingsController::class, 'update']);
+
+            // Holiday Management (CRUD)
+            Route::apiResource('/admin/holidays', HolidayController::class);
         });
 
         // Pegawai restricted routes
-        Route::middleware(['role:pegawai'])->group(function () {
+        Route::middleware(['role:mahasiswa'])->group(function () {
             // Dashboard & History
-            Route::get('/pegawai/dashboard', [DashboardController::class, 'pegawaiDashboard']);
-            Route::get('/pegawai/history', [AttendanceController::class, 'history']);
+            Route::get('/mahasiswa/dashboard', [DashboardController::class, 'mahasiswaDashboard']);
+            Route::get('/mahasiswa/history', [AttendanceController::class, 'history']);
             
             // Leave Requests
-            Route::get('/pegawai/leave', [LeaveRequestController::class, 'index']);
-            Route::post('/pegawai/leave', [LeaveRequestController::class, 'store']);
+            Route::get('/mahasiswa/leave', [LeaveRequestController::class, 'index']);
+            Route::post('/mahasiswa/leave', [LeaveRequestController::class, 'store']);
             
             // Scan QR Attendance
-            Route::post('/pegawai/scan', [ScanController::class, 'scan']);
+            Route::post('/mahasiswa/scan', [ScanController::class, 'scan']);
+ 
+            // Holidays
+            Route::get('/mahasiswa/holidays', [HolidayController::class, 'index']);
         });
     });
 });

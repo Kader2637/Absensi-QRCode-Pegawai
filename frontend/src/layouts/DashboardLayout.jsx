@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 import { 
   FiMenu, FiBell, FiSun, FiMoon, FiLogOut, FiUser, 
   FiHome, FiUsers, FiClock, FiFileText, FiSettings, 
-  FiSearch, FiAlertTriangle, FiCheckSquare, FiLogOut as FiExit
+  FiSearch, FiAlertTriangle, FiCheckSquare, FiLogOut as FiExit, FiCalendar
 } from 'react-icons/fi';
 import { IoQrCodeOutline } from 'react-icons/io5';
 import { HiOutlineMailOpen } from 'react-icons/hi';
@@ -21,7 +21,7 @@ import Modal from '../components/ui/Modal';
 import SearchBar from '../components/ui/SearchBar';
 
 const DashboardLayout = ({ children }) => {
-  const { user, logout, isImpersonating, stopImpersonate, isAdmin, isPegawai } = useAuth();
+  const { user, logout, isImpersonating, stopImpersonate, isAdmin, isMahasiswa } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,7 +54,7 @@ const DashboardLayout = ({ children }) => {
       channel.notification((notif) => {
         // Invalidate queries to trigger instant update
         queryClient.invalidateQueries({ queryKey: ['notifications'] });
-        queryClient.invalidateQueries({ queryKey: ['pegawaiDashboard'] });
+        queryClient.invalidateQueries({ queryKey: ['mahasiswaDashboard'] });
         queryClient.invalidateQueries({ queryKey: ['adminDashboard'] });
         
         toast.success(notif.title || 'Notifikasi baru diterima!', {
@@ -94,7 +94,7 @@ const DashboardLayout = ({ children }) => {
     queryKey: ['employeeSearch', globalSearchQuery],
     queryFn: async () => {
       if (!globalSearchQuery) return [];
-      const res = await api.get(`/admin/pegawai?search=${globalSearchQuery}&limit=5`);
+      const res = await api.get(`/admin/mahasiswa?search=${globalSearchQuery}&limit=5`);
       return res.data.data;
     },
     enabled: isAdmin && searchOpen && globalSearchQuery.length > 1
@@ -103,22 +103,24 @@ const DashboardLayout = ({ children }) => {
   // Sidebar Links definition
   const adminLinks = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: FiHome },
-    { name: 'Manajemen Pegawai', path: '/admin/pegawai', icon: FiUsers },
+    { name: 'Manajemen Mahasiswa', path: '/admin/mahasiswa', icon: FiUsers },
     { name: 'QR Code Manager', path: '/admin/qrcode', icon: IoQrCodeOutline },
     { name: 'Monitoring Kehadiran', path: '/admin/attendance', icon: FiClock },
     { name: 'Pengajuan Izin', path: '/admin/leave', icon: FiCheckSquare },
     { name: 'Laporan Kehadiran', path: '/admin/reports', icon: FiFileText },
+    { name: 'Hari Libur', path: '/admin/holidays', icon: FiCalendar },
     { name: 'Pengaturan Jam Kerja', path: '/admin/settings', icon: FiSettings },
   ];
 
-  const pegawaiLinks = [
-    { name: 'Dashboard', path: '/pegawai/dashboard', icon: FiHome },
-    { name: 'Scan QR Absensi', path: '/pegawai/scan', icon: IoQrCodeOutline },
-    { name: 'Pengajuan Izin', path: '/pegawai/leave', icon: FiCheckSquare },
-    { name: 'Riwayat Kehadiran', path: '/pegawai/history', icon: FiClock },
+  const mahasiswaLinks = [
+    { name: 'Dashboard', path: '/mahasiswa/dashboard', icon: FiHome },
+    { name: 'Scan QR Absensi', path: '/mahasiswa/scan', icon: IoQrCodeOutline },
+    { name: 'Pengajuan Izin', path: '/mahasiswa/leave', icon: FiCheckSquare },
+    { name: 'Riwayat Kehadiran', path: '/mahasiswa/history', icon: FiClock },
+    { name: 'Daftar Hari Libur', path: '/mahasiswa/holidays', icon: FiCalendar },
   ];
 
-  const links = isAdmin ? adminLinks : pegawaiLinks;
+  const links = isAdmin ? adminLinks : mahasiswaLinks;
 
   const handleLogout = async () => {
     await logout();
@@ -128,7 +130,7 @@ const DashboardLayout = ({ children }) => {
   const handleStopImpersonate = async () => {
     const res = await stopImpersonate();
     if (res.success) {
-      navigate('/admin/pegawai');
+      navigate('/admin/mahasiswa');
       queryClient.invalidateQueries();
     }
   };
@@ -204,7 +206,9 @@ const DashboardLayout = ({ children }) => {
                 />
                 <div className="text-left truncate">
                   <h4 className="font-semibold text-sm truncate">{user?.name}</h4>
-                  <p className="text-xs text-gray-500 capitalize">{user?.role?.value || user?.role}</p>
+                  <p className="text-xs text-gray-500 capitalize">
+                    {(user?.role?.value || user?.role) === 'mahasiswa' ? 'Mahasiswa' : (user?.role?.value || user?.role)}
+                  </p>
                 </div>
               </div>
             ) : (
@@ -274,7 +278,9 @@ const DashboardLayout = ({ children }) => {
                   />
                   <div className="text-left">
                     <h4 className="font-semibold text-sm">{user?.name}</h4>
-                    <p className="text-xs text-gray-500 capitalize">{user?.role?.value || user?.role}</p>
+                    <p className="text-xs text-gray-500 capitalize">
+                      {(user?.role?.value || user?.role) === 'mahasiswa' ? 'Mahasiswa' : (user?.role?.value || user?.role)}
+                    </p>
                   </div>
                 </div>
                 <button
@@ -324,7 +330,7 @@ const DashboardLayout = ({ children }) => {
                 <button
                   onClick={() => setSearchOpen(true)}
                   className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
-                  title="Cari pegawai global..."
+                  title="Cari mahasiswa global..."
                 >
                   <FiSearch className="h-5 w-5" />
                 </button>
@@ -420,7 +426,7 @@ const DashboardLayout = ({ children }) => {
                       </div>
                       
                       <Link 
-                        to={isAdmin ? '/admin/dashboard' : '/pegawai/dashboard'} 
+                        to={isAdmin ? '/admin/dashboard' : '/mahasiswa/dashboard'} 
                         onClick={() => setNotificationOpen(false)}
                         className="block text-center py-2.5 border-t border-gray-100 dark:border-gray-700 bg-gray-50 hover:bg-gray-100 dark:bg-gray-900/30 dark:hover:bg-gray-900/60 text-xs font-semibold text-gray-600 dark:text-gray-400"
                       >
@@ -462,14 +468,14 @@ const DashboardLayout = ({ children }) => {
             setSearchOpen(false);
             setGlobalSearchQuery('');
           }}
-          title="Pencarian Global Pegawai"
+          title="Pencarian Global Mahasiswa"
           size="md"
         >
           <div className="flex flex-col gap-4">
             <SearchBar
               value={globalSearchQuery}
               onChange={(e) => setGlobalSearchQuery(e.target.value)}
-              placeholder="Ketik NIP, Nama, Jabatan, atau Divisi..."
+              placeholder="Ketik NIM, Nama, Program Studi, atau Kelas/Angkatan..."
               className="w-full"
             />
 
@@ -485,7 +491,7 @@ const DashboardLayout = ({ children }) => {
                 </div>
               ) : searchResults?.length === 0 ? (
                 <p className="text-sm text-gray-500 text-center py-6">
-                  {globalSearchQuery.length > 1 ? 'Pegawai tidak ditemukan.' : 'Silakan masukkan minimal 2 karakter.'}
+                  {globalSearchQuery.length > 1 ? 'Mahasiswa tidak ditemukan.' : 'Silakan masukkan minimal 2 karakter.'}
                 </p>
               ) : (
                 <div className="divide-y divide-gray-100 dark:divide-gray-800 max-h-72 overflow-y-auto">
@@ -496,7 +502,7 @@ const DashboardLayout = ({ children }) => {
                       onClick={() => {
                         setSearchOpen(false);
                         setGlobalSearchQuery('');
-                        navigate(`/admin/pegawai`); // Redirects to employee list, or we can select him
+                        navigate(`/admin/mahasiswa`); // Redirects to employee list, or we can select him
                         toast.success(`Ditemukan: ${emp.name}`);
                       }}
                     >
@@ -508,7 +514,7 @@ const DashboardLayout = ({ children }) => {
                         />
                         <div className="truncate">
                           <h4 className="font-semibold text-sm truncate">{emp.name}</h4>
-                          <p className="text-xs text-gray-500 truncate">NIP: {emp.nip} | {emp.position || 'Staff'}</p>
+                          <p className="text-xs text-gray-500 truncate">NIM: {emp.nip} | {emp.position || 'Mahasiswa'}</p>
                         </div>
                       </div>
                       <span className="text-[11px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 capitalize">

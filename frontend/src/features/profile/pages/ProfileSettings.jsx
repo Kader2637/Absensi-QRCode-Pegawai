@@ -106,7 +106,7 @@ const ProfileSettings = () => {
     <div className="space-y-6 text-left max-w-4xl mx-auto">
       <div>
         <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Pengaturan Profil</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Kelola foto profil Anda, perbarui detail informasi pegawai, dan amankan akun.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Kelola foto profil Anda, perbarui detail informasi mahasiswa, dan amankan akun.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -147,11 +147,11 @@ const ProfileSettings = () => {
               {/* Read-only NIP and Role */}
               <div className="grid grid-cols-2 gap-4 bg-gray-50 dark:bg-gray-900 p-4 rounded-xl mb-4 text-xs font-semibold">
                 <div>
-                  <span className="text-gray-400 uppercase tracking-wider block mb-0.5">Nomor Induk Pegawai (NIP)</span>
+                  <span className="text-gray-400 uppercase tracking-wider block mb-0.5">Nomor Induk Mahasiswa (NIM)</span>
                   <span className="text-gray-800 dark:text-gray-200 font-mono">{user?.nip || 'Belum diatur'}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 uppercase tracking-wider block mb-0.5">Jabatan / Divisi</span>
+                  <span className="text-gray-400 uppercase tracking-wider block mb-0.5">Program Studi / Kelas</span>
                   <span className="text-gray-800 dark:text-gray-200 capitalize">
                     {user?.position || '-'} ({user?.department || 'Umum'})
                   </span>

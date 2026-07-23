@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Enums\ActivityAction;
+use App\Enums\UserRole;
+use App\Models\User;
 use App\Traits\ApiResponseTrait;
 use App\Traits\AuditLogTrait;
 use Illuminate\Http\Request;
@@ -46,7 +48,7 @@ class AuthController extends Controller
 
         $this->logActivity(
             ActivityAction::LOGIN,
-            "Pegawai {$user->name} berhasil login.",
+            "Mahasiswa {$user->name} berhasil login.",
             $user->id
         );
 
@@ -62,7 +64,7 @@ class AuthController extends Controller
         if ($user) {
             $this->logActivity(
                 ActivityAction::LOGOUT,
-                "Pegawai {$user->name} berhasil logout.",
+                "Mahasiswa {$user->name} berhasil logout.",
                 $user->id
             );
         }
@@ -115,7 +117,7 @@ class AuthController extends Controller
 
         $this->logActivity(
             ActivityAction::UPDATE_EMPLOYEE,
-            "Pegawai {$user->name} memperbarui profil mandiri.",
+            "Mahasiswa {$user->name} memperbarui profil mandiri.",
             $user->id
         );
 
@@ -146,10 +148,44 @@ class AuthController extends Controller
 
         $this->logActivity(
             ActivityAction::UPDATE_EMPLOYEE,
-            "Pegawai {$user->name} mengganti kata sandi.",
+            "Mahasiswa {$user->name} mengganti kata sandi.",
             $user->id
         );
 
         return $this->successResponse('Kata sandi berhasil diperbarui.');
+    }
+
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nip' => 'required|string|max:50|unique:users,nip',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'phone_number' => 'nullable|string|max:20',
+            'position' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationErrorResponse($validator->errors());
+        }
+
+        // Note: The UserObserver automatically handles CREATE_EMPLOYEE logging when a user is created
+        $user = User::create([
+            'nip' => $request->nip,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'position' => $request->position,
+            'department' => $request->department,
+            'password' => Hash::make($request->password),
+            'role' => UserRole::MAHASISWA, // maps to 'mahasiswa' in database
+            'status' => 'active',
+        ]);
+
+        return $this->successResponse('Registrasi berhasil. Silakan masuk.', [
+            'user' => $user
+        ]);
     }
 }

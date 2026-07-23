@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
   const impersonate = async (userId) => {
     setLoading(true);
     try {
-      const response = await api.post(`/admin/pegawai/${userId}/impersonate`);
+      const response = await api.post(`/admin/mahasiswa/${userId}/impersonate`);
       if (response.data.success) {
         setUser(response.data.data.user);
         setIsImpersonating(true);
@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }) => {
   const stopImpersonate = async () => {
     setLoading(true);
     try {
-      const response = await api.post('/pegawai/stop-impersonate');
+      const response = await api.post('/mahasiswa/stop-impersonate');
       if (response.data.success) {
         setUser(response.data.data.user);
         setIsImpersonating(false);
@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }) => {
       impersonate,
       stopImpersonate,
       isAdmin: user?.role === 'admin',
-      isPegawai: user?.role === 'pegawai',
+      isMahasiswa: user?.role === 'mahasiswa',
       refreshProfile: fetchProfile
     }}>
       {children}

@@ -32,7 +32,7 @@ class AttendanceObserver
         
         $this->logActivity(
             ActivityAction::SCAN_IN,
-            "Pegawai {$employee->name} melakukan check-in ({$typeStr}). Status: {$statusStr} pada jam {$attendance->check_in}.",
+            "Mahasiswa {$employee->name} melakukan check-in ({$typeStr}). Status: {$statusStr} pada jam {$attendance->check_in}.",
             $employee->id
         );
     }
@@ -44,7 +44,7 @@ class AttendanceObserver
         if ($attendance->isDirty('check_out') && $attendance->check_out !== null) {
             $this->logActivity(
                 ActivityAction::SCAN_OUT,
-                "Pegawai {$employee->name} melakukan check-out. Jam: {$attendance->check_out}.",
+                "Mahasiswa {$employee->name} melakukan check-out. Jam: {$attendance->check_out}.",
                 $employee->id
             );
         } else if ($attendance->isDirty('status') || $attendance->isDirty('notes')) {

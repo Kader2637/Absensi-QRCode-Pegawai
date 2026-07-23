@@ -29,7 +29,7 @@ class UserObserver
     {
         $this->logActivity(
             ActivityAction::CREATE_EMPLOYEE,
-            "Membuat pegawai baru: {$user->name} (NIP: {$user->nip}, Email: {$user->email})"
+            "Membuat mahasiswa baru: {$user->name} (NIM: {$user->nip}, Email: {$user->email})"
         );
     }
 
@@ -42,7 +42,7 @@ class UserObserver
         
         $this->logActivity(
             ActivityAction::UPDATE_EMPLOYEE,
-            "Memperbarui data pegawai: {$user->name} (NIP: {$user->nip})"
+            "Memperbarui data mahasiswa: {$user->name} (NIM: {$user->nip})"
         );
     }
 
@@ -50,7 +50,7 @@ class UserObserver
     {
         $this->logActivity(
             ActivityAction::DELETE_EMPLOYEE,
-            "Menghapus (soft delete) pegawai: {$user->name} (NIP: {$user->nip})"
+            "Menghapus (soft delete) mahasiswa: {$user->name} (NIM: {$user->nip})"
         );
     }
 }

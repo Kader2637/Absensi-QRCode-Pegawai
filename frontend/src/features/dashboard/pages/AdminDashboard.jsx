@@ -47,7 +47,7 @@ const AdminDashboard = () => {
   const { stats, monthly_trend, department_stats, late_ranking, recent_activities } = dashData;
 
   const cardConfig = [
-    { title: 'Total Pegawai', val: stats.total_pegawai, icon: FiUsers, color: 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/10' },
+    { title: 'Total Mahasiswa', val: stats.total_mahasiswa, icon: FiUsers, color: 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/10' },
     { title: 'Hadir Hari Ini', val: stats.hadir, icon: FiCheckCircle, color: 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/10' },
     { title: 'Terlambat', val: stats.terlambat, icon: FiClock, color: 'text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/10' },
     { title: 'Izin & Sakit', val: stats.izin + stats.sakit, icon: FiFileText, color: 'text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-900/10' },
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Dashboard Analitis</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Ringkasan kehadiran, statistik divisi, dan aktivitas absensi hari ini.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Ringkasan kehadiran, statistik kelas, dan aktivitas absensi hari ini.</p>
         </div>
         <div className="px-4 py-2 bg-white dark:bg-gray-800 rounded-xl shadow-xs border border-gray-150 dark:border-gray-700/50 flex items-center gap-3">
           <FiTrendingUp className="text-blue-500 h-5 w-5" />
@@ -126,10 +126,10 @@ const AdminDashboard = () => {
 
         {/* Department Attendance Bar Chart */}
         <div className="bg-white dark:bg-gray-850 p-6 rounded-2xl shadow-xs border border-gray-200/60 dark:border-gray-800">
-          <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">Statistik Divisi (Hari Ini)</h3>
+          <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">Statistik Kelas (Hari Ini)</h3>
           {department_stats.length === 0 ? (
             <div className="h-72 flex items-center justify-center text-sm text-gray-400">
-              Tidak ada data departemen.
+              Tidak ada data kelas.
             </div>
           ) : (
             <div className="h-72 w-full text-xs">
@@ -141,7 +141,7 @@ const AdminDashboard = () => {
                   <YAxis stroke="#94a3b8" />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="total" name="Total Staff" fill="#94a3b8" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="total" name="Total Mahasiswa" fill="#94a3b8" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="present" name="Hadir" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -156,13 +156,13 @@ const AdminDashboard = () => {
         
         {/* Late leaderboard */}
         <div className="bg-white dark:bg-gray-850 p-6 rounded-2xl shadow-xs border border-gray-200/60 dark:border-gray-800">
-          <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">Pegawai Sering Terlambat (Bulan Ini)</h3>
+          <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">Mahasiswa Sering Terlambat (Bulan Ini)</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-gray-150 dark:border-gray-800 text-xs font-semibold text-gray-400 uppercase tracking-wider pb-2">
-                  <th className="pb-3">Pegawai</th>
-                  <th className="pb-3">Divisi</th>
+                  <th className="pb-3">Mahasiswa</th>
+                  <th className="pb-3">Kelas</th>
                   <th className="pb-3 text-right">Frekuensi Lambat</th>
                 </tr>
               </thead>

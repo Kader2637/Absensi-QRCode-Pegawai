@@ -39,7 +39,7 @@ class LeaveRequestObserver
             if ($status === LeaveRequestStatus::APPROVED) {
                 $this->logActivity(
                     ActivityAction::APPROVE_LEAVE,
-                    "Admin menyetujui pengajuan {$leaveRequest->type} pegawai {$employee->name} (Tanggal: {$leaveRequest->start_date->format('Y-m-d')} s/d {$leaveRequest->end_date->format('Y-m-d')})"
+                    "Admin menyetujui pengajuan {$leaveRequest->type} mahasiswa {$employee->name} (Tanggal: {$leaveRequest->start_date->format('Y-m-d')} s/d {$leaveRequest->end_date->format('Y-m-d')})"
                 );
 
                 $start = Carbon::parse($leaveRequest->start_date);
@@ -62,7 +62,7 @@ class LeaveRequestObserver
             } elseif ($status === LeaveRequestStatus::REJECTED) {
                 $this->logActivity(
                     ActivityAction::REJECT_LEAVE,
-                    "Admin menolak pengajuan {$leaveRequest->type} pegawai {$employee->name}."
+                    "Admin menolak pengajuan {$leaveRequest->type} mahasiswa {$employee->name}."
                 );
 
                 // Send notification

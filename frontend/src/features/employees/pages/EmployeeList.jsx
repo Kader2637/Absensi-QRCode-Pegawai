@@ -12,19 +12,20 @@ import Input from '../../../components/ui/Input';
 import SearchBar from '../../../components/ui/SearchBar';
 import EmptyState from '../../../components/ui/EmptyState';
 import Alert from '../../../components/ui/Alert';
+import Skeleton from '../../../components/ui/Skeleton';
 import toast from 'react-hot-toast';
 import { FiPlus, FiEdit2, FiTrash2, FiDownload, FiUpload, FiEye } from 'react-icons/fi';
 
 // 1. Employee Form Schema (Zod)
 const employeeSchema = z.object({
-  nip: z.string().min(1, 'NIP wajib diisi'),
+  nip: z.string().min(1, 'NIM wajib diisi'),
   name: z.string().min(1, 'Nama lengkap wajib diisi'),
   email: z.string().min(1, 'Email wajib diisi').email('Format email tidak valid'),
   phone_number: z.string().optional(),
   position: z.string().optional(),
   department: z.string().optional(),
   password: z.string().optional(),
-  role: z.enum(['admin', 'pegawai']),
+  role: z.enum(['admin', 'mahasiswa']),
   status: z.enum(['active', 'inactive']),
 });
 
@@ -50,7 +51,7 @@ const EmployeeList = () => {
       position: '',
       department: '',
       password: '',
-      role: 'pegawai',
+      role: 'mahasiswa',
       status: 'active',
     }
   });
@@ -59,7 +60,7 @@ const EmployeeList = () => {
   const { data: empData, isLoading, isError, error } = useQuery({
     queryKey: ['employees', page, search],
     queryFn: async () => {
-      const res = await api.get(`/admin/pegawai?page=${page}&search=${search}&limit=10`);
+      const res = await api.get(`/admin/mahasiswa?page=${page}&search=${search}&limit=10`);
       return res.data;
     }
   });
@@ -71,39 +72,39 @@ const EmployeeList = () => {
   const saveMutation = useMutation({
     mutationFn: async (data) => {
       if (selectedEmployee) {
-        return await api.put(`/admin/pegawai/${selectedEmployee.id}`, data);
+        return await api.put(`/admin/mahasiswa/${selectedEmployee.id}`, data);
       } else {
-        return await api.post('/admin/pegawai', data);
+        return await api.post('/admin/mahasiswa', data);
       }
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
-      toast.success(res.data.message || 'Data pegawai berhasil disimpan.');
+      toast.success(res.data.message || 'Data mahasiswa berhasil disimpan.');
       closeFormModal();
     },
     onError: (err) => {
-      toast.error(err.response?.data?.message || 'Gagal menyimpan data pegawai.');
+      toast.error(err.response?.data?.message || 'Gagal menyimpan data mahasiswa.');
     }
   });
 
   // 4. Mutate: Delete Employee (Soft Delete)
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
-      return await api.delete(`/admin/pegawai/${id}`);
+      return await api.delete(`/admin/mahasiswa/${id}`);
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
-      toast.success('Pegawai berhasil dihapus.');
+      toast.success('Mahasiswa berhasil dihapus.');
     },
     onError: (err) => {
-      toast.error(err.response?.data?.message || 'Gagal menghapus pegawai.');
+      toast.error(err.response?.data?.message || 'Gagal menghapus mahasiswa.');
     }
   });
 
   // 5. Mutate: Import CSV
   const importMutation = useMutation({
     mutationFn: async (formData) => {
-      return await api.post('/admin/pegawai/import', formData, {
+      return await api.post('/admin/mahasiswa/import', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
     },
@@ -128,7 +129,7 @@ const EmployeeList = () => {
       position: '',
       department: '',
       password: '',
-      role: 'pegawai',
+      role: 'mahasiswa',
       status: 'active',
     });
     setModalOpen(true);
@@ -156,7 +157,7 @@ const EmployeeList = () => {
   };
 
   const handleDelete = (id) => {
-    if (confirm('Apakah Anda yakin ingin menghapus pegawai ini (soft delete)?')) {
+    if (confirm('Apakah Anda yakin ingin menghapus mahasiswa ini (soft delete)?')) {
       deleteMutation.mutate(id);
     }
   };
@@ -164,7 +165,7 @@ const EmployeeList = () => {
   const handleExport = () => {
     // Standard link download csv
     const sanctumUrl = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace('/api/v1', '');
-    window.open(`${sanctumUrl}/api/v1/admin/pegawai/export`, '_blank');
+    window.open(`${sanctumUrl}/api/v1/admin/mahasiswa/export`, '_blank');
   };
 
   const handleImportSubmit = (e) => {
@@ -179,7 +180,7 @@ const EmployeeList = () => {
   };
 
   const handleImpersonate = async (id) => {
-    if (confirm('Apakah Anda ingin login/meng-impersonate pegawai ini?')) {
+    if (confirm('Apakah Anda ingin login/meng-impersonate mahasiswa ini?')) {
       await impersonate(id);
       window.location.href = '/'; // redirect to main/pegawai view
     }
@@ -191,8 +192,8 @@ const EmployeeList = () => {
       {/* Page Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Manajemen Pegawai</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Tambah, edit, hapus, impor/ekspor data pegawai perusahaan.</p>
+          <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Manajemen Mahasiswa</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Tambah, edit, hapus, impor/ekspor data mahasiswa.</p>
         </div>
         <div className="flex flex-wrap gap-2 w-full md:w-auto">
           <Button variant="outline" className="flex items-center gap-2 cursor-pointer bg-white dark:bg-transparent" onClick={handleExport}>
@@ -202,7 +203,7 @@ const EmployeeList = () => {
             <FiUpload /> Import CSV
           </Button>
           <Button variant="primary" className="flex items-center gap-2 cursor-pointer" onClick={openAddModal}>
-            <FiPlus /> Tambah Pegawai
+            <FiPlus /> Tambah Mahasiswa
           </Button>
         </div>
       </div>
@@ -215,7 +216,7 @@ const EmployeeList = () => {
             setSearch(e.target.value);
             setPage(1);
           }}
-          placeholder="Cari NIP, nama, jabatan, divisi..."
+          placeholder="Cari NIM, nama, prodi, kelas..."
           className="w-full md:max-w-xs"
         />
       </div>
@@ -226,15 +227,15 @@ const EmployeeList = () => {
           <Skeleton className="h-12" count={6} />
         </div>
       ) : isError ? (
-        <Alert type="error" title="Gagal memuat pegawai" message={error.message} />
+        <Alert type="error" title="Gagal memuat mahasiswa" message={error.message} />
       ) : employees.length === 0 ? (
         <EmptyState 
-          title="Tidak Ada Pegawai" 
-          description={search ? 'Pegawai yang Anda cari tidak ditemukan.' : 'Belum ada data pegawai terdaftar.'} 
+          title="Tidak Ada Mahasiswa" 
+          description={search ? 'Mahasiswa yang Anda cari tidak ditemukan.' : 'Belum ada data mahasiswa terdaftar.'} 
         />
       ) : (
         <div className="space-y-4">
-          <Table headers={['NIP', 'Nama', 'Jabatan', 'Divisi', 'Role', 'Status', 'Aksi']}>
+          <Table headers={['NIM', 'Nama', 'Program Studi', 'Kelas/Angkatan', 'Peran', 'Status', 'Aksi']}>
             {employees.map((emp) => {
               const roleStr = emp.role?.value || emp.role;
               return (
@@ -257,7 +258,7 @@ const EmployeeList = () => {
                     <span className={`px-2 py-0.5 rounded-full text-xs font-bold capitalize ${
                       roleStr === 'admin' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/10 dark:text-blue-400' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
                     }`}>
-                      {roleStr}
+                       {roleStr === 'mahasiswa' ? 'mahasiswa' : roleStr}
                     </span>
                   </td>
                   <td className="px-6 py-4">
@@ -272,7 +273,7 @@ const EmployeeList = () => {
                       <button
                         onClick={() => handleImpersonate(emp.id)}
                         className="p-1.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors cursor-pointer"
-                        title="Masuk sebagai pegawai ini (Impersonate)"
+                        title="Masuk sebagai mahasiswa ini (Impersonate)"
                       >
                         <FiEye className="h-4 w-4" />
                       </button>
@@ -300,7 +301,7 @@ const EmployeeList = () => {
           {/* Pagination Controls */}
           {meta.last_page > 1 && (
             <div className="flex justify-between items-center bg-white dark:bg-gray-850 p-4 rounded-xl border border-gray-200 dark:border-gray-800">
-              <span className="text-xs text-gray-500 dark:text-gray-400">Total {meta.total} Pegawai</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">Total {meta.total} Mahasiswa</span>
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
@@ -333,12 +334,12 @@ const EmployeeList = () => {
       <Modal
         isOpen={modalOpen}
         onClose={closeFormModal}
-        title={selectedEmployee ? 'Edit Data Pegawai' : 'Tambah Pegawai Baru'}
+        title={selectedEmployee ? 'Edit Data Mahasiswa' : 'Tambah Mahasiswa Baru'}
         size="md"
       >
         <form onSubmit={handleSubmit(saveMutation.mutate)} className="space-y-4 text-left">
           <Input
-            label="NIP"
+            label="NIM"
             error={errors.nip}
             required
             {...register('nip')}
@@ -363,12 +364,12 @@ const EmployeeList = () => {
           />
           <div className="grid grid-cols-2 gap-4">
             <Input
-              label="Jabatan"
+              label="Program Studi"
               error={errors.position}
               {...register('position')}
             />
             <Input
-              label="Divisi / Departemen"
+              label="Kelas / Angkatan"
               error={errors.department}
               {...register('department')}
             />
@@ -385,12 +386,12 @@ const EmployeeList = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col text-left mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Role / Peran</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Peran / Hak Akses</label>
               <select 
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 {...register('role')}
               >
-                <option value="pegawai">Pegawai</option>
+                 <option value="mahasiswa">Mahasiswa</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
@@ -421,13 +422,13 @@ const EmployeeList = () => {
           setImportModalOpen(false);
           setCsvFile(null);
         }}
-        title="Impor Pegawai via CSV"
+        title="Impor Mahasiswa via CSV"
         size="md"
       >
         <form onSubmit={handleImportSubmit} className="space-y-4 text-left">
           <Alert 
             type="info" 
-            message="Pastikan file CSV memiliki kolom header yang sesuai: NIP, Nama, Email, No HP, Jabatan, Divisi. Sistem akan memberi password default 'password' untuk semua pegawai yang diimpor." 
+            message="Pastikan file CSV memiliki kolom header yang sesuai: NIM, Nama, Email, No HP, Program Studi, Kelas. Sistem akan memberi password default 'password' untuk semua mahasiswa yang diimpor." 
           />
           <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl bg-gray-50 dark:bg-gray-900/40">
             <input 

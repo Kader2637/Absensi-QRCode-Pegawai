@@ -137,7 +137,7 @@ const ScanQR = () => {
     toast.loading('Memproses absensi...', { id: 'scan-process' });
 
     try {
-      const response = await api.post('/pegawai/scan', {
+      const response = await api.post('/mahasiswa/scan', {
         payload: decodedText,
         location: locationStr || null,
         attendance_type: attendanceType
@@ -145,7 +145,7 @@ const ScanQR = () => {
 
       if (response.data.success) {
         toast.success(response.data.message || 'Absensi berhasil dicatat!', { id: 'scan-process' });
-        navigate('/pegawai/dashboard');
+        navigate('/mahasiswa/dashboard');
       } else {
         toast.error(response.data.message || 'Absensi gagal.', { id: 'scan-process' });
       }
@@ -181,8 +181,8 @@ const ScanQR = () => {
               disabled={scanning}
               className="px-3 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm"
             >
-              <option value="office">Kerja di Kantor (WFO)</option>
-              <option value="remote">Kerja Jarak Jauh (WFH/Remote)</option>
+              <option value="office">Hadir di Kelas (Onsite)</option>
+              <option value="remote">Kuliah Daring (Online/Remote)</option>
             </select>
           </div>
 

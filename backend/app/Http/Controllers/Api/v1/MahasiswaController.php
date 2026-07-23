@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
-class PegawaiController extends Controller
+class MahasiswaController extends Controller
 {
     use ApiResponseTrait, AuditLogTrait;
 
@@ -50,7 +50,7 @@ class PegawaiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Daftar pegawai berhasil diambil.',
+            'message' => 'Daftar mahasiswa berhasil diambil.',
             'data' => $users->items(),
             'meta' => [
                 'current_page' => $users->currentPage(),
@@ -71,7 +71,7 @@ class PegawaiController extends Controller
             'position' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'password' => 'required|string|min:8',
-            'role' => ['required', Rule::in(['admin', 'pegawai'])],
+            'role' => ['required', Rule::in(['admin', 'mahasiswa'])],
             'status' => ['required', Rule::in(['active', 'inactive'])],
         ]);
 
@@ -87,11 +87,11 @@ class PegawaiController extends Controller
             'position' => $request->position,
             'department' => $request->department,
             'password' => Hash::make($request->password),
-            'role' => $request->role === 'admin' ? UserRole::ADMIN : UserRole::PEGAWAI,
+            'role' => $request->role === 'admin' ? UserRole::ADMIN : UserRole::MAHASISWA,
             'status' => $request->status,
         ]);
 
-        return $this->successResponse('Pegawai berhasil ditambahkan.', $user, 201);
+        return $this->successResponse('Mahasiswa berhasil ditambahkan.', $user, 201);
     }
 
     public function show($id)
@@ -99,10 +99,10 @@ class PegawaiController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return $this->errorResponse('Pegawai tidak ditemukan.', 404);
+            return $this->errorResponse('Mahasiswa tidak ditemukan.', 404);
         }
 
-        return $this->successResponse('Detail pegawai berhasil diambil.', $user);
+        return $this->successResponse('Detail mahasiswa berhasil diambil.', $user);
     }
 
     public function update(Request $request, $id)
@@ -110,7 +110,7 @@ class PegawaiController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return $this->errorResponse('Pegawai tidak ditemukan.', 404);
+            return $this->errorResponse('Mahasiswa tidak ditemukan.', 404);
         }
 
         $validator = Validator::make($request->all(), [
@@ -121,7 +121,7 @@ class PegawaiController extends Controller
             'position' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'password' => 'nullable|string|min:8',
-            'role' => ['required', Rule::in(['admin', 'pegawai'])],
+            'role' => ['required', Rule::in(['admin', 'mahasiswa'])],
             'status' => ['required', Rule::in(['active', 'inactive'])],
         ]);
 
@@ -135,7 +135,7 @@ class PegawaiController extends Controller
         $user->phone_number = $request->phone_number;
         $user->position = $request->position;
         $user->department = $request->department;
-        $user->role = $request->role === 'admin' ? UserRole::ADMIN : UserRole::PEGAWAI;
+        $user->role = $request->role === 'admin' ? UserRole::ADMIN : UserRole::MAHASISWA;
         $user->status = $request->status;
 
         if ($request->filled('password')) {
@@ -144,7 +144,7 @@ class PegawaiController extends Controller
 
         $user->save();
 
-        return $this->successResponse('Pegawai berhasil diperbarui.', $user);
+        return $this->successResponse('Mahasiswa berhasil diperbarui.', $user);
     }
 
     public function destroy($id)
@@ -152,7 +152,7 @@ class PegawaiController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return $this->errorResponse('Pegawai tidak ditemukan.', 404);
+            return $this->errorResponse('Mahasiswa tidak ditemukan.', 404);
         }
 
         if ($user->id === Auth::id()) {
@@ -161,7 +161,7 @@ class PegawaiController extends Controller
 
         $user->delete(); // Soft delete
 
-        return $this->successResponse('Pegawai berhasil dihapus.');
+        return $this->successResponse('Mahasiswa berhasil dihapus.');
     }
 
     public function impersonate(Request $request, $id)
@@ -169,7 +169,7 @@ class PegawaiController extends Controller
         $targetUser = User::find($id);
 
         if (!$targetUser) {
-            return $this->errorResponse('Pegawai tidak ditemukan.', 404);
+            return $this->errorResponse('Mahasiswa tidak ditemukan.', 404);
         }
 
         if ($targetUser->role === UserRole::ADMIN) {
@@ -177,7 +177,7 @@ class PegawaiController extends Controller
         }
 
         if ($targetUser->status !== 'active') {
-            return $this->errorResponse('Akun pegawai tidak aktif.', 400);
+            return $this->errorResponse('Akun mahasiswa tidak aktif.', 400);
         }
 
         $adminId = Auth::id();
@@ -185,14 +185,14 @@ class PegawaiController extends Controller
         // Log impersonation start
         $this->logActivity(
             ActivityAction::IMPERSONATE,
-            "Admin " . Auth::user()->name . " mulai meng-impersonate pegawai {$targetUser->name}.",
+            "Admin " . Auth::user()->name . " mulai meng-impersonate mahasiswa {$targetUser->name}.",
             $adminId
         );
 
         // Store impersonator ID in session
         $request->session()->put('impersonator_id', $adminId);
 
-        // Login as the employee
+        // Login as the student
         Auth::login($targetUser);
 
         return $this->successResponse("Berhasil masuk sebagai {$targetUser->name}.", [
@@ -229,11 +229,11 @@ class PegawaiController extends Controller
 
     public function export()
     {
-        $users = User::where('role', 'pegawai')->get();
+        $users = User::where('role', 'mahasiswa')->get();
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="data_pegawai_' . date('Ymd_His') . '.csv"',
+            'Content-Disposition' => 'attachment; filename="data_mahasiswa_' . date('Ymd_His') . '.csv"',
             'Pragma' => 'no-cache',
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Expires' => '0'
@@ -245,7 +245,7 @@ class PegawaiController extends Controller
             // Add UTF-8 BOM for proper Excel encoding
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
-            fputcsv($file, ['NIP', 'Nama', 'Email', 'No HP', 'Jabatan', 'Divisi', 'Status']);
+            fputcsv($file, ['NIM', 'Nama', 'Email', 'No HP', 'Program Studi', 'Kelas/Angkatan', 'Status']);
 
             foreach ($users as $user) {
                 fputcsv($file, [
@@ -297,7 +297,7 @@ class PegawaiController extends Controller
                 continue;
             }
 
-            // Columns mapping: NIP, Nama, Email, No HP, Jabatan, Divisi
+            // Columns mapping: NIM, Nama, Email, No HP, Program Studi, Kelas
             $nip = trim($data[0]);
             $name = trim($data[1]);
             $email = trim($data[2]);
@@ -307,12 +307,12 @@ class PegawaiController extends Controller
 
             // Simple validation
             if (empty($nip) || empty($name) || empty($email)) {
-                $errors[] = "Baris {$rowNum}: NIP, Nama, dan Email wajib diisi.";
+                $errors[] = "Baris {$rowNum}: NIM, Nama, dan Email wajib diisi.";
                 continue;
             }
 
             if (User::where('nip', $nip)->exists()) {
-                $errors[] = "Baris {$rowNum}: NIP {$nip} sudah terdaftar.";
+                $errors[] = "Baris {$rowNum}: NIM {$nip} sudah terdaftar.";
                 continue;
             }
 
@@ -329,7 +329,7 @@ class PegawaiController extends Controller
                 'position' => $position,
                 'department' => $department,
                 'password' => Hash::make('password'), // default password
-                'role' => UserRole::PEGAWAI,
+                'role' => UserRole::MAHASISWA,
                 'status' => 'active',
             ]);
 
@@ -340,10 +340,10 @@ class PegawaiController extends Controller
 
         $this->logActivity(
             ActivityAction::CREATE_EMPLOYEE,
-            "Mengimpor {$importedCount} data pegawai dari berkas CSV."
+            "Mengimpor {$importedCount} data mahasiswa dari berkas CSV."
         );
 
-        return $this->successResponse("Impor selesai. {$importedCount} pegawai berhasil diimpor.", [
+        return $this->successResponse("Impor selesai. {$importedCount} mahasiswa berhasil diimpor.", [
             'imported_count' => $importedCount,
             'errors' => $errors
         ]);

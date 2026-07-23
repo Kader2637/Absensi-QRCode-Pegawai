@@ -15,14 +15,14 @@ import {
 } from 'react-icons/fi';
 import { IoQrCodeOutline } from 'react-icons/io5';
 
-const PegawaiDashboard = () => {
+const MahasiswaDashboard = () => {
   const [activeQrImage, setActiveQrImage] = useState('');
 
   // 1. Fetch Main Dashboard Data
   const { data: dashData, isLoading, isError, error } = useQuery({
-    queryKey: ['pegawaiDashboard'],
+    queryKey: ['mahasiswaDashboard'],
     queryFn: async () => {
-      const res = await api.get('/pegawai/dashboard');
+      const res = await api.get('/mahasiswa/dashboard');
       return res.data.data;
     }
   });
@@ -67,7 +67,7 @@ const PegawaiDashboard = () => {
   if (isLoading) {
     return (
       <div className="space-y-6 text-left">
-        <h1 className="text-2xl font-bold dark:text-white">Dashboard Pegawai</h1>
+        <h1 className="text-2xl font-bold dark:text-white">Dashboard Mahasiswa</h1>
         <Skeleton className="h-44" />
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <Skeleton className="h-24" count={5} />
@@ -93,7 +93,7 @@ const PegawaiDashboard = () => {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Beranda Pegawai</h1>
+        <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Beranda Mahasiswa</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">Selamat datang kembali! Lakukan absensi harian dan cek statistik Anda.</p>
       </div>
 
@@ -119,14 +119,14 @@ const PegawaiDashboard = () => {
           {/* Action button based on scan status */}
           <div className="flex flex-col sm:flex-row gap-3 w-full shrink-0">
             {!today ? (
-              <Link to="/pegawai/scan" className="w-full sm:w-auto">
+              <Link to="/mahasiswa/scan" className="w-full sm:w-auto">
                 <Button variant="primary" className="w-full justify-center gap-2">
                   <FiCamera className="h-5 w-5" />
                   Scan Absen Sekarang
                 </Button>
               </Link>
             ) : !today.check_out ? (
-              <Link to="/pegawai/scan" className="w-full sm:w-auto">
+              <Link to="/mahasiswa/scan" className="w-full sm:w-auto">
                 <Button variant="primary" className="w-full justify-center gap-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600">
                   <FiCamera className="h-5 w-5" />
                   Scan Absen Pulang
@@ -139,7 +139,7 @@ const PegawaiDashboard = () => {
               </div>
             )}
 
-            <Link to="/pegawai/leave" className="w-full sm:w-auto">
+            <Link to="/mahasiswa/leave" className="w-full sm:w-auto">
               <Button variant="outline" className="w-full justify-center gap-2 bg-white dark:bg-transparent">
                 <FiFileText className="h-5 w-5" />
                 Ajukan Izin / Sakit
@@ -232,7 +232,7 @@ const PegawaiDashboard = () => {
               <FiCalendar className="text-blue-500" />
               Riwayat Absensi Terkini
             </h3>
-            <Link to="/pegawai/history" className="text-xs font-semibold text-blue-600 hover:underline dark:text-blue-400">
+            <Link to="/mahasiswa/history" className="text-xs font-semibold text-blue-600 hover:underline dark:text-blue-400">
               Lihat Semua
             </Link>
           </div>
@@ -318,4 +318,4 @@ const PegawaiDashboard = () => {
   );
 };
 
-export default PegawaiDashboard;
+export default MahasiswaDashboard;

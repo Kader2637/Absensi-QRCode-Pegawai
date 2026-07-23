@@ -24,7 +24,7 @@ class DashboardController extends Controller
         $today = now()->toDateString();
 
         // 1. Core counters
-        $totalPegawai = User::where('role', UserRole::PEGAWAI)->count();
+        $totalMahasiswa = User::where('role', UserRole::MAHASISWA)->count();
         
         $hadirToday = Attendance::where('date', $today)->where('status', AttendanceStatus::HADIR)->count();
         $terlambatToday = Attendance::where('date', $today)->where('status', AttendanceStatus::TERLAMBAT)->count();
@@ -32,10 +32,10 @@ class DashboardController extends Controller
         $sakitToday = Attendance::where('date', $today)->where('status', AttendanceStatus::SAKIT)->count();
         
         $totalNotAlpha = Attendance::where('date', $today)->count();
-        $alphaToday = max(0, $totalPegawai - $totalNotAlpha);
+        $alphaToday = max(0, $totalMahasiswa - $totalNotAlpha);
 
-        $attendanceRate = $totalPegawai > 0 
-            ? round((($hadirToday + $terlambatToday) / $totalPegawai) * 100, 1) 
+        $attendanceRate = $totalMahasiswa > 0 
+            ? round((($hadirToday + $terlambatToday) / $totalMahasiswa) * 100, 1) 
             : 0;
 
         // 2. Weekly Trend (last 7 days)
@@ -47,7 +47,7 @@ class DashboardController extends Controller
             $h = Attendance::where('date', $date)->whereIn('status', [AttendanceStatus::HADIR, AttendanceStatus::TERLAMBAT])->count();
             $iz = Attendance::where('date', $date)->where('status', AttendanceStatus::IZIN)->count();
             $sa = Attendance::where('date', $date)->where('status', AttendanceStatus::SAKIT)->count();
-            $totalActiveOnDay = User::where('role', UserRole::PEGAWAI)->where('created_at', '<=', $date . ' 23:59:59')->count();
+            $totalActiveOnDay = User::where('role', UserRole::MAHASISWA)->where('created_at', '<=', $date . ' 23:59:59')->count();
             $scannedOnDay = Attendance::where('date', $date)->count();
             $al = max(0, $totalActiveOnDay - $scannedOnDay);
 
@@ -89,7 +89,7 @@ class DashboardController extends Controller
                 }
             }
 
-            $totalActiveOnDay = User::where('role', UserRole::PEGAWAI)->where('created_at', '<=', $date . ' 23:59:59')->count();
+            $totalActiveOnDay = User::where('role', UserRole::MAHASISWA)->where('created_at', '<=', $date . ' 23:59:59')->count();
             $scannedOnDay = $dayCounts->sum('count');
             $al = max(0, $totalActiveOnDay - $scannedOnDay);
 
@@ -103,7 +103,7 @@ class DashboardController extends Controller
         }
 
         // 4. Department Statistics
-        $departments = User::where('role', UserRole::PEGAWAI)
+        $departments = User::where('role', UserRole::MAHASISWA)
             ->whereNotNull('department')
             ->where('department', '<>', '')
             ->selectRaw('department, count(*) as total')
@@ -138,7 +138,7 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($att) {
                 return [
-                    'name' => $att->user->name ?? 'Pegawai',
+                    'name' => $att->user->name ?? 'Mahasiswa',
                     'nip' => $att->user->nip ?? '-',
                     'position' => $att->user->position ?? '-',
                     'department' => $att->user->department ?? '-',
@@ -154,7 +154,7 @@ class DashboardController extends Controller
 
         return $this->successResponse('Data dashboard admin berhasil dimuat.', [
             'stats' => [
-                'total_pegawai' => $totalPegawai,
+                'total_mahasiswa' => $totalMahasiswa,
                 'hadir' => $hadirToday,
                 'terlambat' => $terlambatToday,
                 'izin' => $izinToday,
@@ -170,7 +170,7 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function pegawaiDashboard(Request $request)
+    public function mahasiswaDashboard(Request $request)
     {
         $user = $request->user();
         $today = now()->toDateString();
@@ -202,7 +202,7 @@ class DashboardController extends Controller
             ->where('status', AttendanceStatus::SAKIT)
             ->count();
 
-        // Compute alpha for pegawai: total calendar days in working days minus present/excused days
+        // Compute alpha for mahasiswa: total calendar days in working days minus present/excused days
         // Or simply: total days from start of month till today, minus actual attendance logs
         $totalDaysElapsed = Carbon::parse($startOfMonth)->diffInDays(now()) + 1;
         
@@ -232,7 +232,7 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        return $this->successResponse('Data dashboard pegawai berhasil dimuat.', [
+        return $this->successResponse('Data dashboard mahasiswa berhasil dimuat.', [
             'today' => $todayAttendance ? [
                 'check_in' => $todayAttendance->check_in,
                 'check_out' => $todayAttendance->check_out,

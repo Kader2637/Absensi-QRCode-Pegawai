@@ -109,7 +109,7 @@ class ScanController extends Controller
 
             $this->logActivity(
                 ActivityAction::SCAN_IN,
-                "Pegawai melakukan check-in via QR Code. Status: {$status->value}.",
+                "Mahasiswa melakukan check-in via QR Code. Status: {$status->value}.",
                 $userId
             );
 
@@ -136,7 +136,7 @@ class ScanController extends Controller
 
             $this->logActivity(
                 ActivityAction::SCAN_OUT,
-                "Pegawai melakukan check-out via QR Code.",
+                "Mahasiswa melakukan check-out via QR Code.",
                 $userId
             );
 

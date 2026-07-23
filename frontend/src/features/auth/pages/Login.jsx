@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../../../context/AuthContext';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { IoQrCodeOutline } from 'react-icons/io5';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
@@ -19,7 +19,7 @@ const Login = () => {
   const { user, login, loading, isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -31,7 +31,7 @@ const Login = () => {
   // If already authenticated, redirect to appropriate dashboard
   if (user) {
     const roleStr = user.role?.value || user.role;
-    return <Navigate to={roleStr === 'admin' ? '/admin/dashboard' : '/pegawai/dashboard'} replace />;
+    return <Navigate to={roleStr === 'admin' ? '/admin/dashboard' : '/mahasiswa/dashboard'} replace />;
   }
 
   const onSubmit = async (data) => {
@@ -43,10 +43,19 @@ const Login = () => {
     }
   };
 
+  const handleQuickLoginAdmin = async () => {
+    setValue('email', 'admin@absensi.com');
+    setValue('password', 'password');
+    const result = await login('admin@absensi.com', 'password');
+    if (result.success) {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-tr from-slate-900 via-slate-800 to-blue-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white/95 dark:bg-gray-850/95 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-white/20 dark:border-gray-800/40">
-        
+
         {/* Logo and Header */}
         <div className="text-center mb-8">
           <div className="inline-flex p-3.5 bg-blue-600 dark:bg-blue-500 rounded-2xl text-white text-3xl shadow-lg shadow-blue-500/30 mb-4 animate-pulse">
@@ -62,7 +71,7 @@ const Login = () => {
 
         {/* Login Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-left">
-          
+
           <Input
             label="Alamat Email"
             type="email"
@@ -106,11 +115,32 @@ const Login = () => {
             Masuk Aplikasi
           </Button>
 
+          {/* Quick Login Admin Button */}
+          <Button
+            type="button"
+            onClick={handleQuickLoginAdmin}
+            variant="secondary"
+            className="w-full py-2 text-sm font-semibold border border-dashed border-gray-300 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 mt-2 cursor-pointer transition-all"
+            disabled={loading}
+          >
+            Login Cepat Admin (Demo)
+          </Button>
+
+          {/* Register Link */}
+          <div className="text-center mt-4">
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              Belum memiliki akun?{' '}
+              <Link to="/register" className="font-semibold text-blue-600 dark:text-blue-400 hover:underline">
+                Daftar Mahasiswa Baru
+              </Link>
+            </span>
+          </div>
+
         </form>
 
         {/* Footer info */}
         <div className="text-center mt-8 text-xs text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-gray-800/80 pt-4">
-          &copy; {new Date().getFullYear()} PT. Solusi Enterprise. All rights reserved.
+          &copy; {new Date().getFullYear()}  All rights reserved.
         </div>
 
       </div>

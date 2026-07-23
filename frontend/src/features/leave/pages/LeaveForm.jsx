@@ -39,7 +39,7 @@ const LeaveForm = () => {
   const { data: myLeavesData, isLoading, isError, error } = useQuery({
     queryKey: ['myLeaves'],
     queryFn: async () => {
-      const res = await api.get('/pegawai/leave');
+      const res = await api.get('/mahasiswa/leave');
       return res.data;
     }
   });
@@ -49,7 +49,7 @@ const LeaveForm = () => {
   // 3. Mutate: Submit Leave Request
   const submitMutation = useMutation({
     mutationFn: async (formData) => {
-      return await api.post('/pegawai/leave', formData, {
+      return await api.post('/mahasiswa/leave', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
     },
@@ -87,7 +87,7 @@ const LeaveForm = () => {
     <div className="space-y-6 text-left">
       <div>
         <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Pengajuan Izin / Sakit</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Ajukan surat perizinan tidak masuk kerja atau surat keterangan sakit.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Ajukan surat perizinan tidak masuk kelas atau surat keterangan sakit.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -111,7 +111,7 @@ const LeaveForm = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Tanggal Muli"
+                label="Tanggal Mulai"
                 type="date"
                 error={errors.start_date}
                 required
@@ -129,9 +129,9 @@ const LeaveForm = () => {
             <div className="flex flex-col text-left mb-4">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alasan Pengajuan <span className="text-red-500">*</span></label>
               <textarea
-                placeholder="Jelaskan alasan detail pengajuan cuti Anda..."
+                placeholder="Jelaskan alasan detail pengajuan izin Anda..."
                 rows="4"
-                className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 dark:bg-gray-800 dark:text-white dark:border-gray-750 ${
+                className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 dark:bg-gray-850 dark:text-white dark:border-gray-750 ${
                   errors.reason ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'
                 }`}
                 {...register('reason')}
@@ -175,10 +175,10 @@ const LeaveForm = () => {
           ) : isError ? (
             <Alert type="error" title="Gagal memuat riwayat" message={error.message} />
           ) : myLeaves.length === 0 ? (
-            <EmptyState title="Belum Ada Pengajuan" description="Anda belum pernah mengirim surat pengajuan cuti/izin." />
+            <EmptyState title="Belum Ada Pengajuan" description="Anda belum pernah mengirim surat pengajuan izin." />
           ) : (
             <div className="overflow-x-auto">
-              <Table headers={['Tipe', 'Tanggal Mulai', 'Tanggal Selesai', 'Alasan', 'Status', 'Catatan Admin']}>
+              <Table headers={['Tipe', 'Tanggal Mulai', 'Tanggal Selesai', 'Alasan', 'Status', 'Catatan Admin/Dosen']}>
                 {myLeaves.map((leave) => {
                   const statusStr = leave.status?.value || leave.status;
                   return (

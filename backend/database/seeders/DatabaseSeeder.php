@@ -33,47 +33,47 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@absensi.com',
             'phone_number' => '081234567890',
             'position' => 'System Administrator',
-            'department' => 'IT Support',
+            'department' => 'Pengelola Sistem',
             'password' => Hash::make('password'),
             'role' => UserRole::ADMIN,
             'status' => 'active',
         ]);
 
-        // 3. Seed Active Employees
+        // 3. Seed Active Students
         User::create([
-            'nip' => '199001012020121001',
+            'nip' => '2022310001',
             'name' => 'Budi Setiawan',
             'email' => 'budi@absensi.com',
             'phone_number' => '081234567891',
-            'position' => 'Senior Web Developer',
-            'department' => 'Technology',
+            'position' => 'Teknik Informatika',
+            'department' => 'TI-2022-A',
             'password' => Hash::make('password'),
-            'role' => UserRole::PEGAWAI,
+            'role' => UserRole::MAHASISWA,
             'status' => 'active',
         ]);
 
         User::create([
-            'nip' => '199203152021082001',
+            'nip' => '2022310002',
             'name' => 'Siti Aminah',
             'email' => 'siti@absensi.com',
             'phone_number' => '081234567892',
-            'position' => 'UI/UX Designer',
-            'department' => 'Design',
+            'position' => 'Sistem Informasi',
+            'department' => 'SI-2022-B',
             'password' => Hash::make('password'),
-            'role' => UserRole::PEGAWAI,
+            'role' => UserRole::MAHASISWA,
             'status' => 'active',
         ]);
 
-        // 4. Seed Inactive Employee (for testing block)
+        // 4. Seed Inactive Student (for testing block)
         User::create([
-            'nip' => '198805202019051001',
+            'nip' => '2021310003',
             'name' => 'Joko Susilo',
             'email' => 'joko@absensi.com',
             'phone_number' => '081234567893',
-            'position' => 'HR Specialist',
-            'department' => 'HRD',
+            'position' => 'Teknik Informatika',
+            'department' => 'TI-2021-C',
             'password' => Hash::make('password'),
-            'role' => UserRole::PEGAWAI,
+            'role' => UserRole::MAHASISWA,
             'status' => 'inactive',
         ]);
     }

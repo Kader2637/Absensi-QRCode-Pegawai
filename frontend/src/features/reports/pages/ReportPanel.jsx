@@ -66,7 +66,7 @@ const ReportPanel = () => {
     printWindow.document.write(`
       <html>
         <head>
-          <title>Laporan Kehadiran Pegawai</title>
+          <title>Laporan Kehadiran Mahasiswa</title>
           <style>
             body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 30px; color: #333; line-height: 1.4; }
             .header { text-align: center; border-bottom: 2px solid #3b82f6; padding-bottom: 15px; margin-bottom: 25px; }
@@ -87,8 +87,8 @@ const ReportPanel = () => {
         </head>
         <body onload="window.print(); window.close();">
           <div class="header">
-            <h1>LAPORAN REKAPITULASI KEHADIRAN</h1>
-            <p>Sistem Informasi Absensi QR Code PT. Solusi Enterprise</p>
+            <h1>LAPORAN REKAPITULASI KEHADIRAN MAHASISWA</h1>
+            <p>Sistem Informasi Absensi QR Code Kampus</p>
           </div>
           
           <div class="meta-info">
@@ -113,9 +113,9 @@ const ReportPanel = () => {
               <tr>
                 <th>No</th>
                 <th>Tanggal</th>
-                <th>NIP</th>
+                <th>NIM</th>
                 <th>Nama</th>
-                <th>Divisi</th>
+                <th>Kelas</th>
                 <th>Masuk</th>
                 <th>Pulang</th>
                 <th>Status</th>
@@ -142,13 +142,13 @@ const ReportPanel = () => {
           <div class="footer-sign">
             <div class="sign-box">
               <p>Mengetahui,</p>
-              <p>Direktur Utama</p>
+              <p>Dekan / Ketua Jurusan</p>
               <div class="sign-space"></div>
               <p>_______________________</p>
             </div>
             <div class="sign-box">
               <p>Jakarta, ${new Date().toLocaleDateString('id-ID', { dateStyle: 'long' })}</p>
-              <p>HRD Manager</p>
+              <p>Kepala Bagian Akademik</p>
               <div class="sign-space"></div>
               <p>_______________________</p>
             </div>
@@ -214,11 +214,11 @@ const ReportPanel = () => {
           </div>
 
           <div className="flex flex-col text-left">
-            <label className="text-xs font-semibold text-gray-400 mb-1">CARI PEGAWAI</label>
+            <label className="text-xs font-semibold text-gray-400 mb-1">CARI MAHASISWA</label>
             <SearchBar
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Nama, NIP..."
+              placeholder="Nama, NIM..."
             />
           </div>
 
@@ -275,7 +275,7 @@ const ReportPanel = () => {
         <EmptyState title="Laporan Kosong" description="Tidak ada data kehadiran yang terekam pada rentang waktu terpilih." />
       ) : (
         <div className="space-y-4">
-          <Table headers={['Tanggal', 'NIP', 'Nama', 'Jam Masuk', 'Jam Pulang', 'Status', 'Tipe']}>
+          <Table headers={['Tanggal', 'NIM', 'Nama', 'Jam Masuk', 'Jam Pulang', 'Status', 'Tipe']}>
             {attendances.map((att) => {
               const statusStr = att.status?.value || att.status;
               const typeStr = att.attendance_type?.value || att.attendance_type;

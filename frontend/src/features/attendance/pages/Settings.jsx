@@ -121,7 +121,7 @@ const Settings = () => {
                 required
                 {...register('late_after')}
               />
-              <span className="text-[11px] text-gray-400 block -mt-2">Pegawai yang memindai QR masuk setelah jam ini akan otomatis berstatus Terlambat.</span>
+              <span className="text-[11px] text-gray-400 block -mt-2">Mahasiswa yang memindai QR masuk setelah jam ini akan otomatis berstatus Terlambat.</span>
             </div>
 
             <div className="flex justify-end pt-4 border-t border-gray-150 dark:border-gray-800">
